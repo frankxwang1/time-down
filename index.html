@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrono Focus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="widget" id="widget">
+
+    <!-- Ambient glow layer -->
+    <div class="ambient-glow" id="ambientGlow"></div>
+
+    <!-- Scanlines overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Top control bar (drag region) -->
+    <div class="top-bar" id="topBar">
+      <button class="btn-icon btn-close" id="closeBtn" title="关闭">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <span class="app-name">CHRONO</span>
+      <button class="btn-icon btn-pin" id="pinBtn" title="窗口置顶">
+        <svg viewBox="0 0 24 24" id="pinSvg">
+          <line x1="12" y1="17" x2="12" y2="21"/>
+          <path d="M5 17h14v-2a6 6 0 0 0-3-5.2V4h1V2H7v2h1v5.8A6 6 0 0 0 5 15v2z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Timer ring -->
+    <div class="ring-container">
+      <svg class="ring-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow-soft" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-hard" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00e5ff"/>
+            <stop offset="100%" stop-color="#00ff9d"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Tick marks -->
+        <g id="ticks" opacity="1"></g>
+
+        <!-- Background track -->
+        <circle class="track-circle" cx="150" cy="150" r="108"/>
+
+        <!-- Progress arc (glow shadow copy) -->
+        <circle class="progress-shadow" id="progressShadow" cx="150" cy="150" r="108"/>
+
+        <!-- Progress arc -->
+        <circle class="progress-circle" id="progressCircle" cx="150" cy="150" r="108"/>
+
+        <!-- Tip dot (moves with arc end) -->
+        <circle class="tip-dot" id="tipDot" cx="150" cy="42" r="5" filter="url(#glow-hard)"/>
+
+        <!-- Center dot -->
+        <circle class="center-dot" id="centerDot" cx="150" cy="150" r="3"/>
+      </svg>
+
+      <!-- Time overlay -->
+      <div class="time-overlay">
+        <div class="time-display" id="timeDisplay">25:00</div>
+        <div class="time-label" id="timeLabel">FOCUS</div>
+      </div>
+    </div>
+
+    <!-- Bottom controls -->
+    <div class="bottom-bar">
+      <button class="btn-control btn-reset" id="resetBtn" title="重置">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+      </button>
+      <button class="btn-control btn-start" id="startBtn" title="开始/暂停">
+        <svg viewBox="0 0 24 24" id="startIcon">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+      </button>
+      <button class="btn-control btn-settings" id="settingsBtn" title="设置时间">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Settings panel (slides up from bottom) -->
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-inner">
+        <div class="settings-title">SET DURATION</div>
+        <div class="time-inputs">
+          <div class="time-input-group">
+            <button class="btn-adj" data-unit="hours" data-dir="up">▲</button>
+            <div class="time-val" id="hoursVal">00</div>
+            <button class="btn-adj" data-unit="hours" data-dir="down">▼</button>
+            <span class="unit-label">H</span>
+          </div>
+          <div class="time-sep">:</div>
+          <div class="time-input-group">
+            <button class="btn-adj" data-unit="minutes" data-dir="up">▲</button>
+            <div class="time-val" id="minutesVal">25</div>
+            <button class="btn-adj" data-unit="minutes" data-dir="down">▼</button>
+            <span class="unit-label">M</span>
+          </div>
+          <div class="time-sep">:</div>
+          <div class="time-input-group">
+            <button class="btn-adj" data-unit="seconds" data-dir="up">▲</button>
+            <div class="time-val" id="secondsVal">00</div>
+            <button class="btn-adj" data-unit="seconds" data-dir="down">▼</button>
+            <span class="unit-label">S</span>
+          </div>
+        </div>
+        <button class="btn-apply" id="applyBtn">APPLY</button>
+      </div>
+    </div>
+
+    <!-- Done overlay -->
+    <div class="done-overlay" id="doneOverlay">
+      <div class="done-ripple"></div>
+      <div class="done-ripple" style="animation-delay: 0.4s"></div>
+      <div class="done-content">
+        <div class="done-text">TIME'S UP</div>
+        <div class="done-sub">专注完成 · 点击继续</div>
+      </div>
+    </div>
+
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>

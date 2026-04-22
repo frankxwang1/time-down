@@ -1,0 +1,12 @@
+{
+  "name": "chrono-focus",
+  "version": "1.0.0",
+  "description": "Focus countdown timer widget",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^33.0.0"
+  }
+}
