@@ -4,7 +4,30 @@
   "description": "Focus countdown timer widget",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder --mac"
+  },
+  "build": {
+    "appId": "com.chrono.focus",
+    "productName": "Chrono Focus",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist",
+      "!.github"
+    ]
+  },
+  "devDependencies": {
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "electron": "^33.0.0"
